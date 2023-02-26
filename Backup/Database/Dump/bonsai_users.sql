@@ -29,13 +29,13 @@ CREATE TABLE `users` (
   `password` text,
   `phone` varchar(20) DEFAULT NULL,
   `email` varchar(200) DEFAULT NULL,
-  `address` varchar(250) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
   `status` int DEFAULT NULL,
   `created` bigint DEFAULT NULL,
   `updated` bigint DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -44,7 +44,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (8,'user1','user a','FCEA920F7412B5DA7BE0CF42B8C93759','0123456789','ab@ab.ab','Ha noi',0,1677177045937,1677183414202);
+INSERT INTO `users` VALUES (8,'lenghia5597','le van nghia','E10ADC3949BA59ABBE56E057F20F883E','0971502597','lenghia5597@gmail.vn','Thanh nhan-HBT-HN',0,1677304878714,1677305928652);
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -57,4 +57,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-25  3:22:56
+-- Dump completed on 2023-02-26 22:54:47

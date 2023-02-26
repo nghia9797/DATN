@@ -29,7 +29,7 @@ CREATE TABLE `admins` (
   `password` text,
   `phone` varchar(20) DEFAULT NULL,
   `email` varchar(200) DEFAULT NULL,
-  `address` varchar(250) DEFAULT NULL,
+  `address` varchar(200) DEFAULT NULL,
   `status` int DEFAULT NULL,
   `created` bigint DEFAULT NULL,
   `updated` bigint DEFAULT NULL,
@@ -59,4 +59,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-25  3:22:56
+-- Dump completed on 2023-02-26 22:54:46
