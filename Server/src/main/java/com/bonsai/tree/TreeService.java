@@ -84,7 +84,7 @@ public class TreeService {
 
     public Tree createTree(Tree tree){
         try {
-            tree.code = "TREE"+ UUID.randomUUID().toString().replaceAll("-","").substring(0,12);
+            tree.code = "TREE"+ UUID.randomUUID().toString().replaceAll("-","").substring(0,6).toUpperCase();
             tree.created = System.currentTimeMillis();
             tree.updated = System.currentTimeMillis();
             return treeDao.insert(tree);

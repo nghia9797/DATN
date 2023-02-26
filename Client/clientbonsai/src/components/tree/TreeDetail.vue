@@ -162,6 +162,7 @@
                 }
                 store.setCarts(carts);
                 localStorage.setItem("carts", JSON.stringify(carts));
+                this.$message.success("Đã thêm vào giỏ hàng");
             },
             getStringForMoney: function(money){
                 return new Intl.NumberFormat('vn-VN').format(money) + "đ";
