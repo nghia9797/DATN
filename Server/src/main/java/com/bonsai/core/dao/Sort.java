@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Sort {
     public enum Direction{
-        ACS,
+        ASC,
         DESC
     }
     private List<String> columnNames;

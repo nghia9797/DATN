@@ -3,6 +3,7 @@ package com.bonsai.role.model;
 import com.bonsai.core.annotation.TableColumn;
 import com.bonsai.core.annotation.TableName;
 import com.bonsai.core.dao.BonsaiEntity;
+import com.bonsai.operation.model.Operation;
 
 import java.util.List;
 
@@ -16,6 +17,8 @@ public class Role extends BonsaiEntity {
 
     @TableColumn(name = "operation_ids")
     public List<Long> operationIds;
+
+    public List<Operation> operations;
 
     public String getName() {
         return name;

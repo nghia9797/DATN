@@ -24,7 +24,7 @@ public class RoleController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/")
+    @GetMapping("/getAll")
     public Response getAll(HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "ROLE:VIEW");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
@@ -89,7 +89,7 @@ public class RoleController {
     public Response delete(@RequestParam(value = "ids") String ids, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "ROLE:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            Long[] roleIds = new Gson().fromJson(ids, Long[].class);
+            Long[] roleIds = new Gson().fromJson(String.format("[%s]", ids), Long[].class);
             roleService.deletes(Arrays.asList(roleIds));
             return Response.createResponseSuccess(null);
         }else return resultCheck;

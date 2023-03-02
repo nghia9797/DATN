@@ -42,7 +42,7 @@ public class AuthService {
     public Response loginUser(String username, String password){
         try {
             User user = userService.getByUsername(username);
-            if(user != null){
+            if(user != null && user.status == 0){
                 if(user.password.equals(encryptPassword(password))){
                     Map<String,Object> payload = new HashMap<String, Object>();
                     payload.put("id", user.id);
@@ -70,7 +70,7 @@ public class AuthService {
     public Response loginAdmin(String username, String password){
         try {
             Admin admin = adminService.getByUsername(username);
-            if(admin != null){
+            if(admin != null && admin.status == 0){
                 admin = adminService.getById(admin.id);
                 if(admin.password.equals(encryptPassword(password))){
                     Map<String,Object> payload = new HashMap<String, Object>();

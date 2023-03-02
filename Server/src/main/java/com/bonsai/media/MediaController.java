@@ -19,13 +19,14 @@ import java.util.UUID;
 @RestController
 public class MediaController {
     @PostMapping("/api/uploadImage")
-    public List<String> uploadImage(@RequestParam("image") List<MultipartFile> files){
+    public List<String> uploadImage(@RequestParam("file") List<MultipartFile> files){
         try {
             String uri = ResourceUtils.getFile("classpath:static/images").getAbsolutePath();
             Path path = Paths.get(uri);
             List<String> paths = new ArrayList<>();
             for(MultipartFile file : files){
-                String fileName = UUID.randomUUID().toString();
+                String fn = file.getOriginalFilename();
+                String fileName = UUID.randomUUID().toString()+fn.substring(fn.lastIndexOf("."), fn.length());
                 Files.copy(file.getInputStream(), path.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
                 String url = "/resource/images/"+fileName;
                 paths.add(url);

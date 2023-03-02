@@ -41,6 +41,13 @@ public class Response {
         return response;
     }
 
+    public static Response createResponseError(String message){
+        Response response = new Response();
+        response.message = message;
+        response.statusCode = Contants.StatusCode.Error;
+        return response;
+    }
+
     public static Response createResponseNotLoginAdmin(){
         Response response = new Response();
         response.message = Contants.Message.NOT_LOGIN;

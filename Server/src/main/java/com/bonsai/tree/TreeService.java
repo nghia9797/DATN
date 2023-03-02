@@ -8,7 +8,6 @@ import com.bonsai.core.dao.Sort;
 import com.bonsai.tree.model.RequestSearchTree;
 import com.bonsai.tree.model.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -40,12 +39,17 @@ public class TreeService {
         return null;
     }
 
+    public List<Tree> getByTreeType(Long treeTypeId){
+        String where = "type_id = "+treeTypeId;
+        return treeDao.find(where);
+    }
+
     public ResultPaging<Tree> search(RequestSearchTree requestSearch){
         try {
             Sort sort = null;
             if(requestSearch.fieldSort != null && !requestSearch.fieldSort.isEmpty()){
                 if(requestSearch.typeSort != null && !requestSearch.typeSort.isEmpty()){
-                    Sort.Direction type = Sort.Direction.ACS;
+                    Sort.Direction type = Sort.Direction.ASC;
                     if(requestSearch.typeSort.equalsIgnoreCase(Sort.Direction.DESC.name())){
                         type = Sort.Direction.DESC;
                     }
@@ -74,6 +78,9 @@ public class TreeService {
             }
             if(requestSearch.typeId != null && requestSearch.typeId > 0){
                 where += " and type_id = "+ requestSearch.typeId;
+            }
+            if(requestSearch.count != null && requestSearch.count > 0){
+                where += " and count > 0";
             }
             return treeDao.find(where, sort, paging);
         }catch (Exception e){

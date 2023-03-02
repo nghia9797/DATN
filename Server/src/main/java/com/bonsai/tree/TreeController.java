@@ -31,7 +31,7 @@ public class TreeController {
     @GetMapping("/searchfree")
     public Response searchFree(@RequestParam Map<String,Object> params, HttpServletRequest request){
         RequestSearchTree requestSearch = gson.fromJson(gson.toJson(params), RequestSearchTree.class);
-        ResultPaging<Tree> result = treeService.search(requestSearch);
+         ResultPaging<Tree> result = treeService.search(requestSearch);
         if(result == null) return Response.createResponseServerError();
         return Response.createResponseSuccess(result);
     }
@@ -105,7 +105,7 @@ public class TreeController {
     public Response delete(@RequestParam(value = "ids") String ids, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "TREE:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            Long[] treeIds = new Gson().fromJson(ids, Long[].class);
+            Long[] treeIds = new Gson().fromJson(String.format("[%s]",ids), Long[].class);
             treeService.deletes(Arrays.asList(treeIds));
             return Response.createResponseSuccess(null);
         }else return resultCheck;

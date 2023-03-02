@@ -78,7 +78,7 @@ public class ShipperController {
     public Response delete(@RequestParam(value = "ids") String ids, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "SHIPPER:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            Long[] shipperIds = new Gson().fromJson(ids, Long[].class);
+            Long[] shipperIds = new Gson().fromJson(String.format("[%s]",ids), Long[].class);
             shipperService.deletes(Arrays.asList(shipperIds));
             return Response.createResponseSuccess(null);
         }else return resultCheck;

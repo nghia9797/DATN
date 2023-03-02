@@ -8,16 +8,22 @@ import com.bonsai.core.dao.BonsaiDao;
 import com.bonsai.core.dao.Paging;
 import com.bonsai.core.dao.ResultPaging;
 import com.bonsai.core.dao.Sort;
+import com.bonsai.tree.TreeService;
+import com.bonsai.tree.model.Tree;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.bonsai.common.Contants;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class BillService {
+    @Autowired
+    private TreeService treeService;
     @Autowired
     private BillDetailService billDetailService;
 
@@ -30,7 +36,7 @@ public class BillService {
 
     public Bill createBill(Bill bill){
         try {
-            bill.code = "BILL"+ UUID.randomUUID().toString().replaceAll("-","").substring(0,12);
+            bill.code = "BILL"+ UUID.randomUUID().toString().replaceAll("-","").substring(0,12).toUpperCase();
             bill.created = System.currentTimeMillis();
             bill.updated = System.currentTimeMillis();
             bill = billDao.insert(bill);
@@ -47,11 +53,25 @@ public class BillService {
     public Bill updateBill(Bill bill){
         try {
             bill.updated = System.currentTimeMillis();
+            updateCountForTree(bill);
             return billDao.update(bill);
         }catch (Exception e){
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void updateCountForTree(Bill bill) {
+        Bill oldBill = getBillById(bill.id);
+        if(oldBill.status != Contants.BillStatus.COMPLETE){
+            if(bill.status == Contants.BillStatus.COMPLETE){
+                for(BillDetail detail : bill.billDetail){
+                    Tree tree = treeService.getById(detail.treeId);
+                    tree.count -= detail.count;
+                    treeService.updateTree(tree);
+                }
+            }
+        }
     }
 
     public List<Bill> getBillForUser(Long userId){
@@ -92,7 +112,7 @@ public class BillService {
             Sort sort = null;
             if(requestSearch.fieldSort != null && !requestSearch.fieldSort.isEmpty()){
                 if(requestSearch.typeSort != null && !requestSearch.typeSort.isEmpty()){
-                    Sort.Direction type = Sort.Direction.ACS;
+                    Sort.Direction type = Sort.Direction.ASC;
                     if(requestSearch.typeSort.equalsIgnoreCase(Sort.Direction.DESC.name())){
                         type = Sort.Direction.DESC;
                     }
@@ -106,22 +126,40 @@ public class BillService {
                     paging = new Paging(requestSearch.page, requestSearch.limit);
                 }
             }
-            String where = "id > 1";
+            String where = "1 = 1";
+            Calendar calendar = Calendar.getInstance();
             if(requestSearch.code != null && !requestSearch.code.isEmpty()){
                 where += " and upper(code) like '%" + requestSearch.code.toUpperCase() + "%'";
             }
             if(requestSearch.from != null && requestSearch.from > 0){
+                calendar.setTimeInMillis(requestSearch.from);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                requestSearch.from = calendar.getTimeInMillis();
                 where += " and created >= "+ requestSearch.from;
             }
             if(requestSearch.to != null && requestSearch.to > 0){
+                calendar.setTimeInMillis(requestSearch.to);
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
+                requestSearch.to = calendar.getTimeInMillis();
                 where += " and created <= "+ requestSearch.to;
             }
-            if(requestSearch.status != null){
+            if(requestSearch.status != null && requestSearch.status >= 0){
                 where += " and status = "+ requestSearch.status;
             }
 
-            if(requestSearch.receiver != null){
+            if(requestSearch.typePay != null && requestSearch.typePay >= 0){
+                where += " and typepay = "+ requestSearch.typePay;
+            }
+
+            if(requestSearch.receiver != null && requestSearch.receiver > 0){
                 where += " and receiver = "+ requestSearch.receiver;
+            }
+            if(requestSearch.sender != null && requestSearch.sender > 0){
+                where += " and sender = "+ requestSearch.sender;
             }
             return billDao.find(where,sort, paging);
         }catch (Exception e){

@@ -5,13 +5,13 @@ import com.bonsai.admin.model.RequestSearch;
 import com.bonsai.auth.AuthService;
 import com.bonsai.common.Contants;
 import com.bonsai.common.Response;
-import com.bonsai.core.dao.BonsaiDao;
 import com.bonsai.core.dao.ResultPaging;
 import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
 
@@ -68,9 +68,34 @@ public class AdminController {
     public Response delete(@RequestParam(value = "ids") String ids, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "ADMIN:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            Long[] adminIds = new Gson().fromJson(ids, Long[].class);
+            Long[] adminIds = new Gson().fromJson(String.format("[%s]",ids), Long[].class);
             adminService.deletes(Arrays.asList(adminIds));
             return Response.createResponseSuccess(null);
+        }else return resultCheck;
+    }
+
+    @GetMapping("/getById/{id}")
+    public Response getById(@PathVariable Long id, HttpServletRequest request){
+        Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "ADMIN:VIEW");
+        if(resultCheck.statusCode == Contants.StatusCode.OK){
+            Admin result = adminService.getById(id);
+            if(result == null) return Response.createResponseServerError();
+            return Response.createResponseSuccess(result);
+        }else return resultCheck;
+    }
+
+    @PutMapping("/changePassword")
+    public Response changePassword(@RequestBody Admin admin, HttpServletRequest request) throws NoSuchAlgorithmException {
+        Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "");
+        if(resultCheck.statusCode == Contants.StatusCode.OK){
+            if(admin.id != null){
+                Admin u = adminService.getById(admin.id);
+                u.password = AuthService.encryptPassword(admin.password);
+                admin = adminService.updateAdmin(u);
+                if(admin == null) return Response.createResponseError();
+                return Response.createResponseSuccess(admin);
+            }
+            return Response.createResponseError();
         }else return resultCheck;
     }
 }

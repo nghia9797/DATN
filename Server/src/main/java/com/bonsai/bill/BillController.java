@@ -107,13 +107,13 @@ public class BillController {
     public Response delete(@RequestParam(value = "ids") String ids, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "BILL:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            Long[] billIds = new Gson().fromJson(ids, Long[].class);
+            Long[] billIds = new Gson().fromJson(String.format("[%s]",ids), Long[].class);
             billService.deletes(Arrays.asList(billIds));
             return Response.createResponseSuccess(null);
         }else return resultCheck;
     }
 
-    @GetMapping
+    @GetMapping("/search")
     public Response search(@RequestParam Map<String,Object> params, HttpServletRequest request){
         Gson gson = new Gson();
         RequestSearchBill requestSearch = gson.fromJson(gson.toJson(params), RequestSearchBill.class);

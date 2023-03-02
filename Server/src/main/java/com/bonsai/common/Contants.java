@@ -42,7 +42,9 @@ public class Contants {
 
     public static interface BillStatus{
         public static Integer CREATE = 0;
-        public static Integer SHIP = 1;
-        public static Integer COMPLETE = 2;
+        public static Integer CONFIRM = 1;
+        public static Integer SHIP = 2;
+        public static Integer COMPLETE = 3;
+        public static Integer CANCEL = 4;
     }
 }

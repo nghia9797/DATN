@@ -1,6 +1,7 @@
 package com.bonsai.shipper.model;
 
 public class RequestSearchShipper {
+    public String code;
     public String name;
     public String phone;
     public String address;

@@ -27,7 +27,7 @@ public class UserService {
             Sort sort = null;
             if(requestSearch.fieldSort != null && !requestSearch.fieldSort.isEmpty()){
                 if(requestSearch.typeSort != null && !requestSearch.typeSort.isEmpty()){
-                    Sort.Direction type = Sort.Direction.ACS;
+                    Sort.Direction type = Sort.Direction.ASC;
                     if(requestSearch.typeSort.equalsIgnoreCase(Sort.Direction.DESC.name())){
                         type = Sort.Direction.DESC;
                     }
@@ -63,7 +63,7 @@ public class UserService {
             if(requestSearch.to != null && requestSearch.to > 0){
                 where += " and created <= "+ requestSearch.to;
             }
-            if(requestSearch.status != null){
+            if(requestSearch.status != null && requestSearch.status >= 0){
                 where += " and status = "+ requestSearch.status;
             }
             return userDao.find(where, sort, paging);
@@ -85,6 +85,9 @@ public class UserService {
         try {
             user.created = new Date().getTime();
             user.updated = new Date().getTime();
+            if(user.password == null){
+                user.password = "123456";
+            }
             user.password = AuthService.encryptPassword(user.password);
             return userDao.insert(user);
         }catch (Exception e){

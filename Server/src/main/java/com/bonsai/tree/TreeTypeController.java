@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +20,12 @@ import java.util.Map;
 public class TreeTypeController {
     @Autowired
     private TreeTypeService treeTypeService;
-
+    @Autowired
+    private TreeService treeService;
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public Response getAll(HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "TYPETREE:VIEW");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
@@ -86,8 +88,34 @@ public class TreeTypeController {
     public Response deleteTreeType(@PathVariable Long id, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "TYPETREE:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            treeTypeService.delete(id);
-            return Response.createResponseSuccess(null);
+            if(treeService.getByTreeType(id).isEmpty()){
+                treeTypeService.delete(id);
+                return Response.createResponseSuccess(null);
+            }else{
+                return Response.createResponseError("Danh mục này không thể xóa");
+            }
+        }else return resultCheck;
+    }
+
+    @DeleteMapping("/deletes")
+    public Response deleteTreeType(@RequestParam(value = "ids") String ids, HttpServletRequest request){
+        Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "TYPETREE:DELETE");
+        if(resultCheck.statusCode == Contants.StatusCode.OK){
+            Gson gson = new Gson();
+            Long[] idTypes = gson.fromJson(String.format("[%s]",ids), Long[].class);
+            boolean flag = true;
+            for(Long id : idTypes){
+                if(!treeService.getByTreeType(id).isEmpty()){
+                    flag = false;
+                    break;
+                }
+            }
+            if(flag){
+                treeTypeService.deletes(Arrays.asList(idTypes));
+                return Response.createResponseSuccess(null);
+            }else{
+                return Response.createResponseError("Có danh mục này không thể xóa");
+            }
         }else return resultCheck;
     }
 }

@@ -37,7 +37,11 @@ public class RoleService {
 
     public Role getById(Long id){
         try {
-            return roleDao.findById(id);
+            Role role = roleDao.findById(id);
+            if(role != null && role.operationIds != null && role.operationIds.size() > 0){
+                role.operations = operationService.getByIds(role.operationIds);
+            }
+            return role;
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -49,7 +53,7 @@ public class RoleService {
             Sort sort = null;
             if(requestSearch.fieldSort != null && !requestSearch.fieldSort.isEmpty()){
                 if(requestSearch.typeSort != null && !requestSearch.typeSort.isEmpty()){
-                    Sort.Direction type = Sort.Direction.ACS;
+                    Sort.Direction type = Sort.Direction.ASC;
                     if(requestSearch.typeSort.equalsIgnoreCase(Sort.Direction.DESC.name())){
                         type = Sort.Direction.DESC;
                     }

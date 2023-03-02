@@ -9,15 +9,12 @@ import com.bonsai.core.dao.Paging;
 import com.bonsai.core.dao.ResultPaging;
 import com.bonsai.core.dao.Sort;
 import com.bonsai.operation.OperationService;
-import com.bonsai.operation.model.Operation;
 import com.bonsai.role.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,7 +35,7 @@ public class AdminService {
             Sort sort = null;
             if(requestSearch.fieldSort != null && !requestSearch.fieldSort.isEmpty()){
                 if(requestSearch.typeSort != null && !requestSearch.typeSort.isEmpty()){
-                    Sort.Direction type = Sort.Direction.ACS;
+                    Sort.Direction type = Sort.Direction.ASC;
                     if(requestSearch.typeSort.equalsIgnoreCase(Sort.Direction.DESC.name())){
                         type = Sort.Direction.DESC;
                     }
@@ -74,7 +71,7 @@ public class AdminService {
             if(requestSearch.to != null && requestSearch.to > 0){
                 where += " and created <= "+ requestSearch.to;
             }
-            if(requestSearch.status != null){
+            if(requestSearch.status != null && requestSearch.status >= 0){
                 where += " and status = "+ requestSearch.status;
             }
             return adminDao.find(where, sort, paging);
@@ -119,6 +116,9 @@ public class AdminService {
         try {
             admin.created = System.currentTimeMillis();
             admin.updated = System.currentTimeMillis();
+            if(admin.password == null){
+                admin.password = "123456";
+            }
             admin.password = AuthService.encryptPassword(admin.password);
             return adminDao.insert(admin);
         }catch (Exception e){

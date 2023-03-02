@@ -9,6 +9,9 @@ public class Shipper extends BonsaiEntity {
     @TableColumn(name = "name")
     public String name;
 
+    @TableColumn(name = "code")
+    public String code;
+
     @TableColumn(name = "phone")
     public String phone;
 
@@ -81,5 +84,13 @@ public class Shipper extends BonsaiEntity {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

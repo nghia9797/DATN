@@ -1,6 +1,7 @@
 package com.bonsai.tree.model;
 
 public class RequestSearchTree {
+    public Long count;
     public String code;
     public String name;
     public Long typeId;

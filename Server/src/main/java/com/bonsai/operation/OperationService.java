@@ -2,10 +2,12 @@ package com.bonsai.operation;
 
 import com.bonsai.core.RepositoryFactory;
 import com.bonsai.core.dao.BonsaiDao;
+import com.bonsai.core.dao.Sort;
 import com.bonsai.operation.model.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +21,9 @@ public class OperationService {
     }
 
     public List<Operation> getAll(){
-        return operationDao.findAll();
+        Sort sort = new Sort(Arrays.asList(new String[]{"alias"}),
+                Arrays.asList(new Sort.Direction[]{Sort.Direction.ASC}));
+        return operationDao.find("1=1", sort, null).data;
     }
 
     public List<Operation> getByIds(List<Long> ids){

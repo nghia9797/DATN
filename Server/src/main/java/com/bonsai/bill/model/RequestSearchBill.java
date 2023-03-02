@@ -1,8 +1,10 @@
 package com.bonsai.bill.model;
 
 public class RequestSearchBill {
+    public Long typePay;
     public String code;
-    public String receiver;
+    public Long receiver;
+    public Long sender;
     public Long from;
     public Long to;
     public Integer page;

@@ -6,7 +6,6 @@ import com.bonsai.core.dao.Paging;
 import com.bonsai.core.dao.ResultPaging;
 import com.bonsai.core.dao.Sort;
 import com.bonsai.tree.model.RequestSearchTreeType;
-import com.bonsai.tree.model.Tree;
 import com.bonsai.tree.model.TreeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class TreeTypeService {
             Sort sort = null;
             if(requestSearch.fieldSort != null && !requestSearch.fieldSort.isEmpty()){
                 if(requestSearch.typeSort != null && !requestSearch.typeSort.isEmpty()){
-                    Sort.Direction type = Sort.Direction.ACS;
+                    Sort.Direction type = Sort.Direction.ASC;
                     if(requestSearch.typeSort.equalsIgnoreCase(Sort.Direction.DESC.name())){
                         type = Sort.Direction.DESC;
                     }
