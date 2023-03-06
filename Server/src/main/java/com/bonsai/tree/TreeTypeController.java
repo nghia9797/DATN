@@ -1,6 +1,7 @@
 package com.bonsai.tree;
 
 import com.bonsai.auth.AuthService;
+import com.bonsai.bill.BillDetailService;
 import com.bonsai.common.Contants;
 import com.bonsai.common.Response;
 import com.bonsai.core.dao.ResultPaging;
@@ -24,6 +25,8 @@ public class TreeTypeController {
     private TreeService treeService;
     @Autowired
     private AuthService authService;
+    @Autowired
+    private BillDetailService billDetailService;
 
     @GetMapping("")
     public Response getAll(HttpServletRequest request){
@@ -88,7 +91,7 @@ public class TreeTypeController {
     public Response deleteTreeType(@PathVariable Long id, HttpServletRequest request){
         Response resultCheck = authService.checkSessionAndPermissionForAdmin(request, "TYPETREE:DELETE");
         if(resultCheck.statusCode == Contants.StatusCode.OK){
-            if(treeService.getByTreeType(id).isEmpty()){
+            if(treeService.getByTreeType(id).isEmpty() || billDetailService.checkExistTreeType(id).isEmpty()){
                 treeTypeService.delete(id);
                 return Response.createResponseSuccess(null);
             }else{
@@ -105,7 +108,7 @@ public class TreeTypeController {
             Long[] idTypes = gson.fromJson(String.format("[%s]",ids), Long[].class);
             boolean flag = true;
             for(Long id : idTypes){
-                if(!treeService.getByTreeType(id).isEmpty()){
+                if(!treeService.getByTreeType(id).isEmpty() || billDetailService.checkExistTreeType(id).isEmpty()){
                     flag = false;
                     break;
                 }

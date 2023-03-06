@@ -139,6 +139,13 @@
                         <template slot-scope="scope">{{ getStringOfDate(scope.row.created) }}</template>
                     </el-table-column>
                     <el-table-column
+                        prop="created"
+                        label="Ngày cập nhật gần nhất"
+                        sortable
+                        width="240">
+                        <template slot-scope="scope">{{ getStringOfDate(scope.row.updated) }}</template>
+                    </el-table-column>
+                    <el-table-column
                         label=""
                         width="120">
                         <template slot-scope="scope">
@@ -321,6 +328,7 @@
                         </el-table>
                         <div style="display: flex;justify-content: space-between;align-items: center;" v-if="isOpenAddTree == true">
                             <el-input v-if="typeOpenTree == 0" v-model="keySearchTree" @change="getTrees" style="width: 24%;" placeholder="-- Tìm theo mã"></el-input>
+                            <el-input v-if="typeOpenTree == 0" v-model="keySearchTreeName" @change="getTrees" style="width: 24%;" placeholder="-- Tìm theo tên"></el-input>
                             <el-select v-if="typeOpenTree == 0" v-model="billDetail.treeId" placeholder="-- Chọn cây" style="width: 24%;" @change="changeTree">
                                 <el-option v-for="item in trees" :key="item.id" :label="`${item.code} - Tên cây: ${item.name}`" :value="item.id"></el-option>
                             </el-select>
@@ -328,7 +336,7 @@
                             <el-input-number v-model="billDetail.count" :min="1" :max="billDetail.maxCount"></el-input-number>
                             <el-button type="primary" @click="addTree">Thêm</el-button>
                         </div>
-                        <el-form-item style="margin-top: 20px;">
+                        <el-form-item style="margin-top: 20px;" v-if="bill.status<3">
                             <el-button type="primary" @click="submitForm('billDetail')">Lưu hóa đơn</el-button>
                         </el-form-item>
                     </el-form>
@@ -449,7 +457,8 @@
                     amount: 0,
                     discount: 0,
                     treeName: "",
-                    treeCode: ""
+                    treeCode: "",
+                    treeType: 0
                 },
                 isOpenModal: false,
                 typeModal: 0,
@@ -463,6 +472,7 @@
                 senders2:[],
                 trees:[],
                 keySearchTree: "",
+                keySearchTreeName:"",
                 isOpenAddTree: false,
                 typeOpenTree: 0,
                 isBillNotChange: false
@@ -678,13 +688,14 @@
             },
             openAddTree: async function(){
                 this.keySearchTree = "";
+                this.keySearchTreeName = "";
                 this.billDetail = JSON.parse(JSON.stringify(this.billDetailDefault));
                 await this.getTrees();
                 this.isOpenAddTree = true;
                 this.typeOpenTree = 0;
             },
             getTrees: async function(){
-                let res = await RestFul.getWithToken("/api/manage/tree/search", null, {code:this.keySearchTree, typeSort:"asc", fieldSort:"name",count:1});
+                let res = await RestFul.getWithToken("/api/manage/tree/search", null, {name: this.keySearchTreeName,code:this.keySearchTree, typeSort:"asc", fieldSort:"name",count:1});
                 if(res != null){
                     if(res.statusCode == 200){
                         this.trees = res.data.data;
@@ -778,6 +789,7 @@
                         this.billDetail.treeName = el.name;
                         this.billDetail.discount = el.discount;
                         this.billDetail.maxCount = el.count;
+                        this.billDetail.treeType = el.typeId;
                     }
                 });
             },

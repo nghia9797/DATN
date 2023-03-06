@@ -7,6 +7,7 @@ import com.bonsai.core.dao.BonsaiDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,5 +53,17 @@ public class BillDetailService {
 
     public void deletes(List<Long> ids){
         billDetailDao.deletes(ids);
+    }
+
+    public List<BillDetail> checkExistTreeType(Long treeType){
+        try {
+            String where = String.format("tree_type = %d limit 1 offset 0", treeType);
+            return billDetailDao.find(where);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return new ArrayList<BillDetail>(){{
+            this.add(new BillDetail());
+        }};
     }
 }

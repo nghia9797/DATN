@@ -47,6 +47,10 @@ public class BonsaiDao <T extends BonsaiEntity>{
         rowMapper = getRowMapper();
     }
 
+    public JdbcTemplate getJdbcTemplate(){
+        return jdbcTemplate;
+    }
+
     private RowMapper<T> getRowMapper(){
         return new RowMapper<T>() {
             @Override

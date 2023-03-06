@@ -116,6 +116,32 @@ export const RestFul =  {
         }else return null;
     },
 
+    async downloadWithToken(link, data, params){
+        let config = {
+            responseType: 'octet/stream',
+            headers: {
+                "Authorization":"Bearer "+localStorage.getItem("token")
+            }
+        };
+        link = this.baseURL + link;
+        if(params != null){
+            params = new URLSearchParams(params);
+            link += "?" + params;
+        }
+        let res = await axios.get(link, config)
+        .catch(e => {
+            console.log(e);
+            return null;
+        });
+        if(res != null){
+            let blob = new Blob([res],{
+                type: "octet/stream"
+            });
+            let u = URL.createObjectURL(blob);
+            window.open(u,"_blank");
+        }
+    },
+
     async postWithToken(link, data){
         let config = {
             headers: {
