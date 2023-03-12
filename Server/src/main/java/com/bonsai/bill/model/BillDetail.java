@@ -31,7 +31,7 @@ public class BillDetail extends BonsaiEntity {
     public String treeCode;
 
     @TableColumn(name = "tree_type")
-    public String treeType;
+    public Long treeType;
 
     public Long getBillId() {
         return billId;
@@ -97,11 +97,11 @@ public class BillDetail extends BonsaiEntity {
         this.treeCode = treeCode;
     }
 
-    public String getTreeType() {
+    public Long getTreeType() {
         return treeType;
     }
 
-    public void setTreeType(String treeType) {
+    public void setTreeType(Long treeType) {
         this.treeType = treeType;
     }
 }

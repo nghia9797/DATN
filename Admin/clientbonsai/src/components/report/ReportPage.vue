@@ -28,7 +28,7 @@
             </div>
             <div class="item-filter">
                 <el-button icon="el-icon-search" circle @click="getDataReport"></el-button>
-                <!-- <el-button icon="el-icon-download" circle @click="downloadReport"></el-button> -->
+                <el-button icon="el-icon-download" circle @click="downloadReport"></el-button>
             </div>
         </div>
         <div v-if="(dataReport.items || []).length > 0" class="header-report content">
@@ -237,6 +237,7 @@
             },
             downloadReport: function(){
                 let pas = {
+                    treeTypeName: this.params.treeTypeName,
                     treeType: this.params.treeType,
                     from: this.params.from * 1 || 0,
                     to: this.params.to * 1 || 0

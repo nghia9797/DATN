@@ -235,7 +235,8 @@
                                             amountUnit: trees[j].cost,
                                             discount: trees[j].discount,
                                             amountUnit2: 0,
-                                            amount: 0
+                                            amount: 0,
+                                            treeType: trees[j].typeId
                                         })
                                     }
                                 }

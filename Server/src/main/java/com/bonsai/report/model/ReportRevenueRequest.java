@@ -4,6 +4,7 @@ public class ReportRevenueRequest {
     public Long treeType;
     public Long from;
     public Long to;
+    public String treeTypeName;
 
     public Long getTreeType() {
         return treeType;
@@ -27,5 +28,13 @@ public class ReportRevenueRequest {
 
     public void setTo(Long to) {
         this.to = to;
+    }
+
+    public String getTreeTypeName() {
+        return treeTypeName;
+    }
+
+    public void setTreeTypeName(String treeTypeName) {
+        this.treeTypeName = treeTypeName;
     }
 }

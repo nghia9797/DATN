@@ -336,7 +336,7 @@
                             <el-input-number v-model="billDetail.count" :min="1" :max="billDetail.maxCount"></el-input-number>
                             <el-button type="primary" @click="addTree">Thêm</el-button>
                         </div>
-                        <el-form-item style="margin-top: 20px;" v-if="bill.status<3">
+                        <el-form-item style="margin-top: 20px;" v-if="bill.statusOld<3">
                             <el-button type="primary" @click="submitForm('billDetail')">Lưu hóa đơn</el-button>
                         </el-form-item>
                     </el-form>
@@ -414,7 +414,8 @@
                     senderName: null,
                     receiverName: "",
                     amount: 0,
-                    billDetail: []
+                    billDetail: [],
+                    statusOld: 0
                 },
                 bill:{
                     id: 0,
@@ -431,7 +432,8 @@
                     senderName: null,
                     receiverName: "",
                     amount: 0,
-                    billDetail: []
+                    billDetail: [],
+                    statusOld: 0
                 },
                 billDetailDefault:{
                     id: 0,
@@ -614,6 +616,7 @@
                 if(res != null){
                     if(res.statusCode == 200){
                         this.bill = res.data;
+                        this.bill.statusOld = this.bill.status;
                         if(this.bill.status >=3){
                             this.isBillNotChange = true;
                         }else{
